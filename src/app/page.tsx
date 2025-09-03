@@ -1,103 +1,166 @@
-import Image from "next/image";
+'use client';
 
-export default function Home() {
+import React from 'react';
+import Link from 'next/link';
+import { MainLayout } from '@/components/layouts/main-layout';
+import { ProductList } from '@/features/products/components';
+import { SearchBar } from '@/features/search/components';
+import { Button } from '@/components/ui/button/button';
+import { Card } from '@/components/ui/card/card';
+import { useFeaturedProducts, useNewArrivals, useBestSellingProducts } from '@/features/products/hooks/useProducts';
+
+export default function HomePage() {
+  const { data: featuredData, isLoading: featuredLoading } = useFeaturedProducts(8);
+  const { data: newArrivalsData, isLoading: newArrivalsLoading } = useNewArrivals(4);
+  const { data: bestSellingData, isLoading: bestSellingLoading } = useBestSellingProducts(4);
+
   return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
-
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+    <MainLayout>
+      {/* Hero Section */}
+      <section className="bg-gradient-to-r from-blue-600 to-purple-600 text-white py-20">
+        <div className="container mx-auto px-4">
+          <div className="max-w-3xl mx-auto text-center">
+            <h1 className="text-4xl md:text-5xl font-bold mb-6">
+              Next.js テンプレートショップへようこそ
+            </h1>
+            <p className="text-xl mb-8">
+              最高品質の商品を最高の価格でお届けします
+            </p>
+            <div className="max-w-xl mx-auto mb-8">
+              <SearchBar 
+                placeholder="商品を検索..." 
+                className="w-full"
+                onSearch={(query) => {
+                  // Navigate to search page with query
+                  window.location.href = `/search?q=${encodeURIComponent(query)}`;
+                }}
+              />
+            </div>
+            <div className="flex gap-4 justify-center">
+              <Link href="/products">
+                <Button size="lg" variant="secondary">
+                  商品を見る
+                </Button>
+              </Link>
+              <Link href="/search">
+                <Button size="lg" variant="outline" className="text-white border-white hover:bg-white hover:text-gray-900">
+                  詳細検索
+                </Button>
+              </Link>
+            </div>
+          </div>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
+      </section>
+
+      {/* Features Section */}
+      <section className="py-16 bg-gray-50">
+        <div className="container mx-auto px-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <Card className="p-6 text-center">
+              <div className="text-4xl mb-4">🚚</div>
+              <h3 className="text-lg font-semibold mb-2">送料無料</h3>
+              <p className="text-gray-600">
+                5,000円以上のご購入で全国送料無料
+              </p>
+            </Card>
+            <Card className="p-6 text-center">
+              <div className="text-4xl mb-4">🔒</div>
+              <h3 className="text-lg font-semibold mb-2">安全な決済</h3>
+              <p className="text-gray-600">
+                SSL暗号化で安全なオンライン決済
+              </p>
+            </Card>
+            <Card className="p-6 text-center">
+              <div className="text-4xl mb-4">↩️</div>
+              <h3 className="text-lg font-semibold mb-2">返品保証</h3>
+              <p className="text-gray-600">
+                30日間の返品・交換保証付き
+              </p>
+            </Card>
+          </div>
+        </div>
+      </section>
+
+      {/* Featured Products */}
+      <section className="py-16">
+        <div className="container mx-auto px-4">
+          <div className="flex justify-between items-center mb-8">
+            <h2 className="text-3xl font-bold">おすすめ商品</h2>
+            <Link href="/products?featured=true">
+              <Button variant="outline">すべて見る →</Button>
+            </Link>
+          </div>
+          <ProductList
+            products={featuredData || []}
+            loading={featuredLoading}
+            columns={4}
+            cardVariant="default"
           />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+        </div>
+      </section>
+
+      {/* New Arrivals & Best Selling */}
+      <section className="py-16 bg-gray-50">
+        <div className="container mx-auto px-4">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+            {/* New Arrivals */}
+            <div>
+              <div className="flex justify-between items-center mb-6">
+                <h3 className="text-2xl font-bold">新着商品</h3>
+                <Link href="/products?sort=newest">
+                  <Button variant="outline" size="sm">もっと見る</Button>
+                </Link>
+              </div>
+              <ProductList
+                products={newArrivalsData || []}
+                loading={newArrivalsLoading}
+                columns={2}
+                cardVariant="compact"
+              />
+            </div>
+
+            {/* Best Selling */}
+            <div>
+              <div className="flex justify-between items-center mb-6">
+                <h3 className="text-2xl font-bold">ベストセラー</h3>
+                <Link href="/products?sort=bestselling">
+                  <Button variant="outline" size="sm">もっと見る</Button>
+                </Link>
+              </div>
+              <ProductList
+                products={bestSellingData || []}
+                loading={bestSellingLoading}
+                columns={2}
+                cardVariant="compact"
+              />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-20 bg-gradient-to-r from-purple-600 to-pink-600 text-white">
+        <div className="container mx-auto px-4 text-center">
+          <h2 className="text-3xl md:text-4xl font-bold mb-4">
+            メンバー限定特典
+          </h2>
+          <p className="text-xl mb-8">
+            今すぐ登録して、限定クーポンとセール情報を受け取りましょう
+          </p>
+          <div className="flex gap-4 justify-center">
+            <Link href="/auth/signup">
+              <Button size="lg" variant="secondary">
+                無料登録
+              </Button>
+            </Link>
+            <Link href="/auth/login">
+              <Button size="lg" variant="outline" className="text-white border-white hover:bg-white hover:text-gray-900">
+                ログイン
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </section>
+    </MainLayout>
   );
 }
