@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { Suspense, useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { MainLayout } from '@/components/layouts/main-layout';
 import { SearchBar, SearchFilters as SearchFiltersComponent, SearchResults } from '@/features/search/components';
@@ -8,8 +8,9 @@ import { Button } from '@/components/ui/button/button';
 import { useSearch } from '@/features/search/hooks/useSearch';
 import { FilterIcon, XIcon } from 'lucide-react';
 import type { SearchFilters } from '@/features/search/types';
+import { Loading } from '@/components/ui/loading/loading';
 
-export default function SearchPage() {
+function SearchPageContent() {
   const searchParams = useSearchParams();
   const query = searchParams.get('q') || '';
   const category = searchParams.get('category') || '';
@@ -208,5 +209,13 @@ export default function SearchPage() {
         )}
       </div>
     </MainLayout>
+  );
+}
+
+export default function SearchPage() {
+  return (
+    <Suspense fallback={<Loading />}>
+      <SearchPageContent />
+    </Suspense>
   );
 }

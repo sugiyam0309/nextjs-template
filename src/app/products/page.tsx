@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { Suspense, useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { MainLayout } from '@/components/layouts/main-layout';
 import { ProductList } from '@/features/products/components';
@@ -9,6 +9,7 @@ import { Input } from '@/components/ui/input/input';
 import { Button } from '@/components/ui/button/button';
 import { useProducts, useCategories } from '@/features/products/hooks/useProducts';
 import { SearchIcon, FilterIcon, GridIcon, ListIcon } from 'lucide-react';
+import { Loading } from '@/components/ui/loading/loading';
 
 const sortOptions = [
   { value: 'relevance', label: '関連性' },
@@ -25,7 +26,7 @@ const pageSizeOptions = [
   { value: '96', label: '96件' },
 ];
 
-export default function ProductsPage() {
+function ProductsPageContent() {
   const searchParams = useSearchParams();
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [showFilters, setShowFilters] = useState(false);
@@ -245,5 +246,13 @@ export default function ProductsPage() {
         </div>
       </div>
     </MainLayout>
+  );
+}
+
+export default function ProductsPage() {
+  return (
+    <Suspense fallback={<Loading />}>
+      <ProductsPageContent />
+    </Suspense>
   );
 }

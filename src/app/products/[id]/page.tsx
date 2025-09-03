@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { MainLayout } from '@/components/layouts/main-layout';
 import { Button } from '@/components/ui/button/button';
 import { Loading } from '@/components/ui/loading/loading';
@@ -92,9 +93,9 @@ export default function ProductDetailPage() {
         <div className="bg-white border-b">
           <div className="container mx-auto px-4 py-3">
             <nav className="flex items-center text-sm">
-              <a href="/" className="text-gray-500 hover:text-gray-700">ホーム</a>
+              <Link href="/" className="text-gray-500 hover:text-gray-700">ホーム</Link>
               <span className="mx-2 text-gray-400">/</span>
-              <a href="/products" className="text-gray-500 hover:text-gray-700">商品一覧</a>
+              <Link href="/products" className="text-gray-500 hover:text-gray-700">商品一覧</Link>
               <span className="mx-2 text-gray-400">/</span>
               <span className="text-gray-900">{product.name}</span>
             </nav>
